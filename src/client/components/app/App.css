@@ -1,0 +1,36 @@
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.selectDiv > .currencyDiv {
+  margin: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.selectDiv > .fetchBtn {
+  border: solid 1px black;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.headerDiv {
+  position: fixed;
+}
+
+.selectDiv {
+  margin: 120px 20% 0 10%;
+}
+
+.tableOutput {
+  margin: 0 10% 20px 10%;
+}
