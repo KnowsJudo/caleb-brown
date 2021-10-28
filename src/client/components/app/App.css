@@ -9,28 +9,54 @@
   overflow: auto;
 }
 
-.selectDiv > .currencyDiv {
+li {
+  list-style: circle;
+}
+
+.currencyDiv {
   margin: auto;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.selectDiv > .fetchBtn {
+.headerDiv {
+  position: fixed;
+}
+
+.mainDiv {
+  margin: 120px 10% 0 10%;
+}
+
+.mainDiv > .buttonClass {
+  margin: 100px auto;
+  border: solid 1px black;
+  display: flex;
+  justify-content: center;
+}
+
+.singleDiv {
+  margin-bottom: 50px;
+}
+
+.singleDiv > .searchClass {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+
+.singleDiv > .buttonClass {
+  border: solid 1px black;
+  margin: 50px auto;
+}
+
+.selectDiv > .buttonClass {
   border: solid 1px black;
   margin: auto;
   display: flex;
   justify-content: center;
 }
 
-.headerDiv {
-  position: fixed;
-}
-
-.selectDiv {
-  margin: 120px 20% 0 10%;
-}
-
-.tableOutput {
-  margin: 0 10% 20px 10%;
+.tableOutput > .buttonClass {
+  border: solid 1px black;
 }

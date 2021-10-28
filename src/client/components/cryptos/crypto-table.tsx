@@ -11,15 +11,21 @@ import {
   TableCell,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { ICoinData } from '../../types/coin-data';
+import { ICoinData, IMarketData } from '../../types/coin-data';
 import { Currency } from '../currency/currency';
-import { coinGecko } from '../../api/coin-gecko';
+import { getMarkets } from '../../api/gecko-markets';
 import { symbolKey } from '../../utils/symbols';
 import { Filter } from '../filter/filter';
+import { getCoins } from '../../api/gecko-coins';
+import { SingleSearch } from '../crypto-single/crypto-single';
 
 export const CryptoTable: React.FC = () => {
-  const [data, setData] = useState<ICoinData[] | null>(null);
+  const [marketData, setMarketData] = useState<IMarketData[] | null>(null);
+  const [allData, setAllData] = useState<ICoinData[] | null>(null);
+  const [selected, setSelected] = useState<string>('');
   const [currency, setCurrency] = useState<string>('aud');
+  const [showTable, setShowTable] = useState<boolean>(false);
+  const [showSearch, setShowSearch] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,8 +39,21 @@ export const CryptoTable: React.FC = () => {
     //checks not initial render and data has been requested before updating API call
     firstRender.current
       ? (firstRender.current = false)
-      : firstClick.current && getData();
+      : firstClick.current && getMarketData();
   }, [currency]);
+
+  useEffect(() => {
+    if (marketData && marketData.length <= 1 && showTable) {
+      getMarketData();
+    }
+    marketData &&
+      setMarketData(
+        marketData.filter(
+          (match) => selected === match.name || selected === match.symbol,
+        ),
+      ),
+      setPage(0);
+  }, [selected]);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -43,32 +62,46 @@ export const CryptoTable: React.FC = () => {
     setPage(newPage);
   };
 
-  const getData = async () => {
+  const getMarketData = async () => {
     setLoading(true);
     try {
-      const result = await coinGecko(currency);
-      setData(result);
+      const result = await getMarkets(currency);
+      setMarketData(result);
       setLoading(false);
       firstClick.current = true;
+      setShowTable(true);
     } catch (error) {
       setError(true);
       setLoading(false);
-      console.error(error, 'api call failed');
+      console.error(error, 'market api call failed');
+    }
+  };
+
+  const getAllData = async () => {
+    setLoading(true);
+    try {
+      const result = await getCoins();
+      setAllData(result);
+      setLoading(false);
+      setShowSearch(true);
+    } catch (error) {
+      setError(true);
+      setLoading(false);
+      console.error(error, 'coint list api call failed');
     }
   };
 
   return (
-    <div>
+    <div className="mainDiv">
       <div className="selectDiv">
         <Button
-          className="fetchBtn"
+          className="buttonClass"
           onClick={() => {
-            getData();
+            getMarketData();
           }}
         >
           List most Popular Cryptos
         </Button>
-        <Currency currency={currency} setCurrency={setCurrency} />
       </div>
       <div className="tableOutput">
         {error && (
@@ -77,20 +110,35 @@ export const CryptoTable: React.FC = () => {
             limit may be exceeded (50 per minute).
           </Alert>
         )}
+        {!error && marketData && (
+          <Button
+            className="buttonClass"
+            onClick={() => setShowTable(showTable ? false : true)}
+          >
+            {showTable ? 'Hide Table' : 'Show Table'}
+          </Button>
+        )}
         {loading ? (
           <CircularProgress
             style={{
               display: 'flex',
-              margin: 'auto',
+              margin: '20px auto',
               justifyContent: 'center',
+              color: 'black',
             }}
             size={60}
           />
         ) : (
           !error &&
-          data && (
+          marketData &&
+          showTable && (
             <TableContainer>
-              <Filter data={data} setData={setData} getData={getData} />
+              <Currency currency={currency} setCurrency={setCurrency} />
+              <Filter
+                data={marketData}
+                selected={selected}
+                setSelected={setSelected}
+              />
               <Table>
                 <TableHead>
                   <TableRow>
@@ -110,7 +158,7 @@ export const CryptoTable: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data
+                  {marketData
                     //select data shown in table based on page index and rows
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
@@ -132,7 +180,7 @@ export const CryptoTable: React.FC = () => {
               </Table>{' '}
               <TablePagination
                 component="div"
-                count={data.length}
+                count={marketData.length}
                 onPageChange={handleChangePage}
                 page={page}
                 rowsPerPage={rowsPerPage}
@@ -146,6 +194,10 @@ export const CryptoTable: React.FC = () => {
           )
         )}
       </div>
+      <Button className="buttonClass" onClick={() => getAllData()}>
+        Search for any Crypto
+      </Button>
+      {showSearch && allData && <SingleSearch allData={allData} />}
     </div>
   );
 };
