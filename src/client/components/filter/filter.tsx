@@ -27,7 +27,7 @@ export const Filter: React.FC<IFilter> = (props) => {
           <TextField {...params} label="Search by Name or Symbol" />
         )}
         style={{
-          maxWidth: '40%',
+          maxWidth: '70%',
           margin: 'auto auto 20px auto',
           display: 'flex',
           justifyContent: 'flex-start',

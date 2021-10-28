@@ -11,3 +11,9 @@ npm i
 ```
 npm run start
 ```
+
+To run tests type
+
+```
+npm run test
+```

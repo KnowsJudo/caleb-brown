@@ -18,6 +18,7 @@ import { symbolKey } from '../../utils/symbols';
 import { Filter } from '../filter/filter';
 import { getCoins } from '../../api/gecko-coins';
 import { SingleSearch } from '../crypto-single/crypto-single';
+import coinGecko from '../../image/coingecko-branding.webp';
 
 export const CryptoTable: React.FC = () => {
   const [marketData, setMarketData] = useState<IMarketData[] | null>(null);
@@ -45,6 +46,7 @@ export const CryptoTable: React.FC = () => {
   useEffect(() => {
     if (marketData && marketData.length <= 1 && showTable) {
       getMarketData();
+      return;
     }
     marketData &&
       setMarketData(
@@ -198,6 +200,19 @@ export const CryptoTable: React.FC = () => {
         Search for any Crypto
       </Button>
       {showSearch && allData && <SingleSearch allData={allData} />}
+      {firstRender.current && (
+        <img
+          src={coinGecko}
+          alt="coingecko logo"
+          style={{
+            maxWidth: '300px',
+            maxHeight: '300px',
+            margin: '80px auto',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        />
+      )}
     </div>
   );
 };

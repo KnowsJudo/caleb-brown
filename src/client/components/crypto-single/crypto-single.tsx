@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ICoinDetails, ISingle } from '../../types/coin-data';
 import { Alert } from '@material-ui/lab';
 import { getCoinDetails } from '../../api/gecko-coin-details';
+import { TestId } from '../../types/test-types';
 
 export const SingleSearch: React.FC<ISingle> = (props) => {
   const [searchedID, setSearchedID] = useState<string>('');
@@ -46,10 +47,15 @@ export const SingleSearch: React.FC<ISingle> = (props) => {
     <div className="singleDiv">
       <TextField
         className="searchClass"
-        label="Enter Crypto id or symbol"
+        inputProps={{ placeholder: 'Enter Crypto id or symbol' }}
         onChange={(e) => setSearchedID(e.target.value)}
+        value={searchedID}
       ></TextField>
-      <Button className="buttonClass" onClick={handleID}>
+      <Button
+        className="buttonClass"
+        onClick={handleID}
+        data-testid={TestId.SHOW_DETAILS}
+      >
         Show details
       </Button>
       <div className="singleResultsDiv">
@@ -76,7 +82,9 @@ export const SingleSearch: React.FC<ISingle> = (props) => {
               <h2>{outputDetails.name}</h2>
               <img src={outputDetails.image.small as string} alt="coin image" />
               <ul>
-                <li>ID: {outputDetails.id}</li>
+                <li data-testid={TestId.OUTPUT_DETAILS}>
+                  ID: {outputDetails.id}
+                </li>
                 <li>Symbol: {outputDetails.symbol}</li>
                 <li>Community Score: {outputDetails.community_score}</li>
                 <li>Market Cap Rank: {outputDetails.market_cap_rank}</li>

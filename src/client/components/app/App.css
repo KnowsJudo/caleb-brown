@@ -26,6 +26,7 @@ li {
 
 .mainDiv {
   margin: 120px 10% 0 10%;
+  min-height: 80vh;
 }
 
 .mainDiv > .buttonClass {
@@ -59,4 +60,22 @@ li {
 
 .tableOutput > .buttonClass {
   border: solid 1px black;
+}
+
+@media (max-width: 750px) {
+  .mainDiv {
+    min-height: 70vh;
+  }
+  .mainDiv > .buttonClass,
+  .tableOutput > .buttonClass {
+    margin: 30px auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .currencyDiv {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+  }
 }
